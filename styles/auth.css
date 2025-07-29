@@ -1,0 +1,253 @@
+/* Auth Pages */
+.auth-header {
+    padding: 20px 0;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.auth-header .container {
+    display: flex;
+    justify-content: center;
+}
+
+.auth-main {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.auth-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-header h1 {
+    color: var(--dark-color);
+    margin-bottom: 10px;
+}
+
+.auth-header p {
+    color: var(--secondary-color);
+}
+
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: var(--transition);
+}
+
+.auth-form input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.auth-form input.error-border {
+    border-color: var(--danger-color);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-group input {
+    width: auto;
+    margin-right: 10px;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 10px;
+    /* Enhanced for coursework */
+    will-change: transform;
+    transition: all 0.3s ease !important;
+}
+
+.btn-auth:hover {
+    background-color: var(--primary-dark);
+    /* Enhanced for coursework */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-auth:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.auth-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.auth-footer a {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Loading Spinner */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+    /* Enhanced for coursework */
+    transition: opacity 0.3s ease;
+    margin-left: 8px;
+}
+
+/* Form Validation States */
+input:invalid {
+    border-color: #e74c3c;
+}
+
+input:valid {
+    border-color: #2ecc71;
+}
+
+.spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+.error-message {
+    color: #ff4444;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: none;
+}
+
+input:invalid, input.error {
+    border-color: #ff4444;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.checkbox-group input {
+    margin-right: 10px;
+}
+
+/* Notification Styles (New for coursework) */
+.notification {
+    transition: all 0.3s ease;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 15px;
+    margin-bottom: 0;
+    border-radius: 4px;
+}
+
+.notification.show {
+    opacity: 1;
+    max-height: 100px;
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+.notification.success {
+    background-color: #27ae60;
+    color: white;
+}
+
+.notification.error {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.notification.info {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Input Group Enhancements (New for coursework) */
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon input {
+    padding-left: 40px !important;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7f8c8d;
+}
+
+.input-with-icon input:focus + i {
+    color: var(--primary-color);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        margin: 20px;
+        padding: 30px 20px;
+    }
+    
+    .auth-form {
+        padding: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+}

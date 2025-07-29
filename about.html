@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About FitTrack Pro - Your Fitness Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        /* Navigation */
+        .main-nav ul {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .main-nav a {
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .main-nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .main-nav a.active {
+            background-color: #3498db;
+        }
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .dropdown {
+            position: absolute;
+            right: 0;
+            background: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 10px 0;
+            display: none;
+        }
+        
+        .user-menu:hover .dropdown {
+            display: block;
+        }
+        
+        .dropdown a {
+            color: #333;
+            padding: 8px 16px;
+            display: block;
+        }
+        
+        .dropdown a:hover {
+            background-color: #f5f5f5;
+        }
+        
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: none;
+        }
+        
+        /* About Page Styles */
+        .about-hero {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .about-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .about-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* Mission Section */
+        .mission-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .mission-card {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .mission-card.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .mission-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #f5f7fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: #3498db;
+        }
+        
+        .mission-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .mission-card p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        /* Features Section */
+        .features-section {
+            padding: 60px 0;
+            background-color: #f5f7fa;
+        }
+        
+        .features-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card i {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .feature-card p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .stats-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .stat-card.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stat-card h3 {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        /* Team Section */
+        .team-section {
+            padding: 60px 0;
+            background-color: #f5f7fa;
+        }
+        
+        .team-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .team-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .team-card.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .team-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .team-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .team-card-content {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .team-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .team-card .position {
+            color: #3498db;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .team-card .bio {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #f5f7fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 60px 0;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            text-align: center;
+        }
+        
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        /* Button Styles */
+        .btn-primary {
+            padding: 12px 25px;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-secondary {
+            padding: 12px 25px;
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        .main-footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-logo {
+            height: 30px;
+            width: auto;
+            margin-bottom: 15px;
+        }
+        
+        .footer-social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .footer-social-links a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .footer-social-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .footer-bottom p {
+            margin-bottom: 10px;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-nav ul {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: #2c3e50;
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+                display: none;
+            }
+            
+            .main-nav ul.active {
+                display: flex;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .about-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .mission-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="FitTrack Pro Logo">
+                <span>FitTrack Pro</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="workout.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
+                    <li><a href="nutrition.html"><i class="fas fa-utensils"></i> Nutrition</a></li>
+                    <li><a href="about.html" class="active"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li class="user-menu">
+                        <a href="profile.html" id="userProfileLink"><i class="fas fa-user-circle"></i> 
+                            <span id="userName">Profile</span>
+                        </a>
+                        <ul class="dropdown">
+                            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="about-hero">
+            <div class="container">
+                <h1>About FitTrack Pro</h1>
+                <p>Your complete health and fitness tracking solution</p>
+            </div>
+        </section>
+
+        <section class="mission-section">
+            <div class="container">
+                <div class="mission-card">
+                    <div class="mission-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h2>Our Mission</h2>
+                    <p>At FitTrack Pro, we believe that everyone deserves access to tools that make health and fitness tracking simple, intuitive, and effective. Our mission is to empower individuals to take control of their health journey with comprehensive tracking and personalized insights.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="container">
+                <h2>Why Choose FitTrack Pro?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Comprehensive Tracking</h3>
+                        <p>Monitor workouts, nutrition, and health metrics all in one place.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>Mobile-Friendly</h3>
+                        <p>Access your data anytime, anywhere with our responsive design.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-lock"></i>
+                        <h3>Privacy Focused</h3>
+                        <p>Your data belongs to you. We prioritize your privacy and security.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="container">
+                <h2>Our Impact</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 data-count="10000">0</h3>
+                        <p>Active Users</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 data-count="500000">0</h3>
+                        <p>Workouts Logged</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 data-count="2500000">0</h3>
+                        <p>Meals Tracked</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="team-section" id="team">
+            <div class="container">
+                <h2>Meet The Team</h2>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <img src="images/team-member1.jpg" alt="Alex Johnson">
+                        <div class="team-card-content">
+                            <h3>Alex Johnson</h3>
+                            <p class="position">Founder & CEO</p>
+                            <p class="bio">Fitness enthusiast with 10+ years in health tech.</p>
+                            <div class="social-links">
+                                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="team-card">
+                        <img src="images/team-member2.jpg" alt="Sarah Chen">
+                        <div class="team-card-content">
+                            <h3>Sarah Chen</h3>
+                            <p class="position">Lead Developer</p>
+                            <p class="bio">Passionate about creating seamless user experiences.</p>
+                            <div class="social-links">
+                                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="team-card">
+                        <img src="images/team-member3.jpg" alt="Michael Rodriguez">
+                        <div class="team-card-content">
+                            <h3>Michael Rodriguez</h3>
+                            <p class="position">Nutrition Specialist</p>
+                            <p class="bio">Registered dietitian with a focus on sports nutrition.</p>
+                            <div class="social-links">
+                                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                <a href="#" aria-label="Website"><i class="fas fa-globe"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>Ready to Start Your Fitness Journey?</h2>
+                <div class="cta-buttons">
+                    <a href="signup.html" class="btn-primary">
+                        <i class="fas fa-user-plus"></i> Sign Up Now
+                    </a>
+                    <a href="contact.html" class="btn-secondary">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="images/logo-small.png" alt="FitTrack Pro Logo" class="footer-logo">
+                    <p>Your complete health and fitness tracking solution.</p>
+                    <div class="footer-social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="workout.html">Workouts</a></li>
+                        <li><a href="nutrition.html">Nutrition</a></li>
+                        <li><a href="about.html">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> support@fittrackpro.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (800) FIT-TRACK</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FitTrack Pro. All rights reserved.</p>
+                <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    $(document).ready(function() {
+        // Check authentication
+        const currentUser = JSON.parse(localStorage.getItem('fitTrackCurrentUser'));
+        if (!currentUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Set user name if available
+        if (currentUser && currentUser.name) {
+            $('#userName').text(currentUser.name);
+        }
+
+        // Mobile menu toggle
+        $('#mobileMenuBtn').on('click', function() {
+            $('#mainNav ul').slideToggle(300);
+            $(this).attr('aria-expanded', $('#mainNav ul').is(':visible'));
+        });
+
+        // Logout functionality
+        $('#logoutLink').on('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('fitTrackCurrentUser');
+            window.location.href = 'login.html';
+        });
+
+        // Animation functions
+        function animateOnScroll() {
+            $('.mission-card, .team-card, .stat-card').each(function() {
+                const elementPosition = $(this).offset().top;
+                const scrollPosition = $(window).scrollTop();
+                const windowHeight = $(window).height();
+                
+                if (scrollPosition > elementPosition - windowHeight + 100) {
+                    $(this).addClass('animate');
+                }
+            });
+        }
+
+        // Initialize animations
+        $(window).on('scroll', animateOnScroll);
+        animateOnScroll();
+
+        // Counter animation for stats
+        function animateCounters() {
+            $('.stat-card h3').each(function() {
+                const $this = $(this);
+                const target = parseInt($this.data('count'));
+                const count = parseInt($this.text());
+                const increment = target / 200;
+                
+                if (count < target) {
+                    $this.text(Math.ceil(count + increment));
+                    setTimeout(animateCounters, 1);
+                } else {
+                    $this.text(target.toLocaleString());
+                }
+            });
+        }
+
+        // Start counter animation when stats section is in view
+        const statsSection = $('.stats-section');
+        if (statsSection.length) {
+            $(window).on('scroll', function() {
+                const scrollPosition = $(window).scrollTop();
+                const sectionPosition = statsSection.offset().top;
+                const windowHeight = $(window).height();
+                
+                if (scrollPosition > sectionPosition - windowHeight + 200) {
+                    animateCounters();
+                    $(window).off('scroll');
+                }
+            });
+        }
+
+        // Smooth scrolling for anchor links
+        $('a[href^="#"]').on('click', function(e) {
+            const href = $(this).attr('href');
+            if (href !== '#') {
+                e.preventDefault();
+                const target = $(href);
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 70
+                    }, 800);
+                }
+            }
+        });
+
+        // Feature card hover animations
+        $('.feature-card').hover(
+            function() {
+                $(this).stop().animate({ 
+                    transform: 'translateY(-5px)',
+                    boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
+                }, 200);
+            },
+            function() {
+                $(this).stop().animate({ 
+                    transform: 'translateY(0)',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                }, 200);
+            }
+        );
+
+        // Team card hover animations
+        $('.team-card').hover(
+            function() {
+                $(this).stop().animate({ 
+                    transform: 'translateY(-5px) scale(1.02)',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+                }, 200);
+            },
+            function() {
+                $(this).stop().animate({ 
+                    transform: 'translateY(0) scale(1)',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+                }, 200);
+            }
+        );
+
+        // Initial fade-in for hero section
+        $('.about-hero').hide().fadeIn(1000);
+    });
+    </script>
+</body>
+</html>

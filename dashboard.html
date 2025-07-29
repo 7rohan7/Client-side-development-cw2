@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FitTrack Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        /* Navigation */
+        .main-nav ul {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .main-nav a {
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .main-nav a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .main-nav a.active {
+            background-color: #3498db;
+        }
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .dropdown {
+            position: absolute;
+            right: 0;
+            background: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 10px 0;
+            display: none;
+        }
+        
+        .user-menu:hover .dropdown {
+            display: block;
+        }
+        
+        .dropdown a {
+            color: #333;
+            padding: 8px 16px;
+            display: block;
+        }
+        
+        .dropdown a:hover {
+            background-color: #f5f5f5;
+        }
+        
+        /* Main Content */
+        .dashboard {
+            padding: 40px 0;
+        }
+        
+        /* Stats Summary */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.2rem;
+        }
+        
+        .stat-card h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #7f8c8d;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value span {
+            font-size: 1rem;
+            font-weight: normal;
+            color: #7f8c8d;
+        }
+        
+        .stat-change {
+            font-size: 0.9rem;
+            color: #2ecc71;
+        }
+        
+        .stat-change.negative {
+            color: #e74c3c;
+        }
+        
+        /* Charts Section */
+        .activity-charts {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (min-width: 992px) {
+            .activity-charts {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .chart-container h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .btn-chart-action {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-chart-action:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Recent Activities */
+        .recent-activities {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .section-header h3 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-icon {
+            padding: 8px 15px;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            margin-left: 10px;
+        }
+        
+        .btn-icon:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            background-color: #f0f0f0;
+            transform: translateX(5px);
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1rem;
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-details h4 {
+            font-size: 1rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .activity-details p {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .activity-link {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            transition: all 0.3s;
+        }
+        
+        .activity-link:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        /* Notification */
+        #notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+        
+        #notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        #notification.success {
+            background-color: #2ecc71;
+        }
+        
+        #notification.error {
+            background-color: #e74c3c;
+        }
+        
+        #notification.info {
+            background-color: #3498db;
+        }
+        
+        /* Footer */
+        .main-footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-logo {
+            height: 30px;
+            width: auto;
+            margin-bottom: 15px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .footer-bottom p {
+            margin-bottom: 10px;
+        }
+        
+        .footer-bottom a {
+            color: #3498db;
+        }
+        
+        /* Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #2c3e50;
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-summary {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .btn-icon {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="FitTrack Pro Logo">
+                <span>FitTrack Pro</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="dashboard.html" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="workout.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
+                    <li><a href="nutrition.html"><i class="fas fa-utensils"></i> Nutrition</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li class="user-menu">
+                        <a href="profile.html" id="userProfileLink"><i class="fas fa-user-circle"></i> 
+                            <span id="userName">Profile</span>
+                        </a>
+                        <ul class="dropdown">
+                            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="dashboard" id="main-content">
+        <div class="container">
+            <div id="notification"></div>
+            
+            <section class="stats-summary">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-fire"></i></div>
+                    <h3>Calories Burned</h3>
+                    <p class="stat-value" id="caloriesBurned">0 <span>kcal</span></p>
+                    <p class="stat-change" id="caloriesChange">--</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-shoe-prints"></i></div>
+                    <h3>Steps</h3>
+                    <p class="stat-value" id="stepsCount">0 <span>steps</span></p>
+                    <p class="stat-change" id="stepsProgress">--</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-heartbeat"></i></div>
+                    <h3>Heart Rate</h3>
+                    <p class="stat-value" id="heartRate">0 <span>bpm</span></p>
+                    <p class="stat-change" id="heartRateStatus">--</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-weight"></i></div>
+                    <h3>Weight</h3>
+                    <p class="stat-value" id="currentWeight">0 <span>kg</span></p>
+                    <p class="stat-change" id="weightChange">--</p>
+                </div>
+            </section>
+
+            <section class="activity-charts">
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-bar"></i> Weekly Activity</h3>
+                    <canvas id="activityChart" aria-label="Weekly activity chart"></canvas>
+                    <div class="chart-actions">
+                        <a href="workout.html" class="btn-chart-action">
+                            <i class="fas fa-plus"></i> Add Workout
+                        </a>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-line"></i> Calorie Comparison</h3>
+                    <canvas id="calorieChart" aria-label="Calorie comparison chart"></canvas>
+                    <div class="chart-actions">
+                        <a href="nutrition.html" class="btn-chart-action">
+                            <i class="fas fa-utensils"></i> Log Meal
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="recent-activities">
+                <div class="section-header">
+                    <h3><i class="fas fa-history"></i> Recent Activities</h3>
+                    <div>
+                        <a href="workout.html" class="btn-icon">
+                            <i class="fas fa-dumbbell"></i> Workouts
+                        </a>
+                        <a href="nutrition.html" class="btn-icon">
+                            <i class="fas fa-utensils"></i> Nutrition
+                        </a>
+                    </div>
+                </div>
+                <div class="activity-list" id="activityList">
+                    <!-- Activities loaded dynamically -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="images/logo-small.png" alt="FitTrack Pro Logo" class="footer-logo">
+                    <p>Your complete health and fitness tracking solution.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="workout.html">Workouts</a></li>
+                        <li><a href="nutrition.html">Nutrition</a></li>
+                        <li><a href="about.html">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> support@fittrackpro.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (800) FIT-TRACK</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FitTrack Pro. All rights reserved.</p>
+                <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    $(document).ready(function() {
+        // Check authentication
+        const currentUser = JSON.parse(localStorage.getItem('fitTrackCurrentUser'));
+        if (!currentUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Set user name with animation
+        $('#userName').text(currentUser.name || 'Profile').hide().fadeIn(500);
+
+        // Utility functions
+        function getDayIndex(dateStr) {
+            const day = new Date(dateStr).getDay();
+            return day === 0 ? 6 : day - 1;
+        }
+
+        function getWeeklyWorkoutData() {
+            const workouts = JSON.parse(localStorage.getItem('fitTrackWorkouts')) || [];
+            const minutes = [0, 0, 0, 0, 0, 0, 0];
+            workouts.forEach(w => {
+                const index = getDayIndex(w.date);
+                minutes[index] += w.duration;
+            });
+            return minutes;
+        }
+
+        function getWeeklyCalorieData() {
+            const meals = JSON.parse(localStorage.getItem('fitTrackMeals')) || [];
+            const workouts = JSON.parse(localStorage.getItem('fitTrackWorkouts')) || [];
+            const consumed = [0, 0, 0, 0, 0, 0, 0];
+            const burned = [0, 0, 0, 0, 0, 0, 0];
+            meals.forEach(m => consumed[getDayIndex(m.date)] += m.calories);
+            workouts.forEach(w => burned[getDayIndex(w.date)] += w.calories);
+            return { consumed, burned };
+        }
+
+        function loadRecentActivities() {
+            const activityList = $('#activityList');
+            activityList.empty();
+            const meals = JSON.parse(localStorage.getItem('fitTrackMeals')) || [];
+            const workouts = JSON.parse(localStorage.getItem('fitTrackWorkouts')) || [];
+            const all = [...meals.map(m => ({...m, type: 'meal'})), ...workouts.map(w => ({...w, type: 'workout'}))];
+            all.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            all.slice(0, 5).forEach(entry => {
+                const activityItem = $(`
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas ${entry.type === 'meal' ? 'fa-utensils' : 'fa-running'}"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>${entry.type === 'meal' ? 'Meal' : 'Workout'}</h4>
+                            <p>${entry.date} • ${entry.calories} kcal</p>
+                        </div>
+                        <a href="${entry.type === 'meal' ? 'nutrition-details.html' : 'workout-details.html'}" class="activity-link">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                `).hide();
+                
+                activityList.append(activityItem);
+                activityItem.fadeIn(500);
+            });
+        }
+
+        function showNotification(message, type) {
+            const notification = $('#notification');
+            const icon = type === 'success' ? 'fa-check-circle' : 
+                         type === 'error' ? 'fa-exclamation-circle' : 
+                         'fa-info-circle';
+            
+            notification.html(`
+                <i class="fas ${icon}"></i>
+                <span>${message}</span>
+            `).removeClass().addClass(`notification ${type} show`);
+            
+            setTimeout(() => {
+                notification.removeClass('show');
+            }, 3000);
+        }
+
+        // Initialize charts with animation
+        setTimeout(() => {
+            // Animate stat cards
+            $('.stat-card').each(function(index) {
+                $(this).hide().delay(index * 100).fadeIn(300);
+            });
+
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            new Chart(activityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Workout Minutes',
+                        data: getWeeklyWorkoutData(),
+                        backgroundColor: '#3498db'
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    scales: { y: { beginAtZero: true } },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+
+            const { consumed, burned } = getWeeklyCalorieData();
+            const calorieCtx = document.getElementById('calorieChart').getContext('2d');
+            new Chart(calorieCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [
+                        {
+                            label: 'Calories Consumed',
+                            data: consumed,
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            fill: true
+                        },
+                        {
+                            label: 'Calories Burned',
+                            data: burned,
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            fill: true
+                        }
+                    ]
+                },
+                options: { 
+                    responsive: true,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+
+            // Set stats with animation
+            const totalBurned = burned.reduce((a,b) => a+b, 0);
+            $('#caloriesBurned').text(totalBurned + ' kcal').hide().fadeIn(500);
+            
+            // Set random sample data for other stats
+            $('#stepsCount').text('8,542 steps').hide().fadeIn(500);
+            $('#heartRate').text('72 bpm').hide().fadeIn(500);
+            $('#currentWeight').text('68 kg').hide().fadeIn(500);
+            
+            // Set sample changes
+            $('#caloriesChange').text('+12% this week');
+            $('#stepsProgress').text('85% of goal');
+            $('#heartRateStatus').text('Resting');
+            $('#weightChange').text('-1.2kg this month').addClass('negative');
+        }, 300);
+
+        // Load activities
+        loadRecentActivities();
+
+        // Logout functionality
+        $('#logoutLink').on('click', function(e) {
+            e.preventDefault();
+            showNotification('Logging out...', 'info');
+            setTimeout(() => {
+                localStorage.removeItem('fitTrackCurrentUser');
+                window.location.href = 'login.html';
+            }, 1000);
+        });
+
+        // Mobile menu toggle
+        $('#mobileMenuBtn').on('click', function() {
+            $('#mainNav').slideToggle(300);
+            $(this).attr('aria-expanded', $('#mainNav').is(':visible'));
+        });
+
+        // Stat card hover effects
+        $('.stat-card').hover(
+            function() {
+                $(this).stop().animate({ marginTop: "-5px" }, 200);
+            },
+            function() {
+                $(this).stop().animate({ marginTop: "0" }, 200);
+            }
+        );
+
+        // Initial fade-in for content
+        $('.stats-summary, .activity-charts, .recent-activities').hide().fadeIn(800);
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,302 @@
+/* ===== Base Styles ===== */
+:root {
+    --primary-color: #4a90e2;
+    --primary-dark: #357abd;
+    --secondary-color: #6c757d;
+    --dark-color: #343a40;
+    --light-color: #f8f9fa;
+    --border-radius: 12px;
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* ===== Hero Section ===== */
+.hero {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4f0fb 100%);
+}
+
+.hero .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.hero-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.hero-content h1 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+    line-height: 1.2;
+    background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: var(--secondary-color);
+    max-width: 500px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.hero-image {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    box-shadow: 0 20px 40px rgba(74, 144, 226, 0.2);
+    transform: perspective(1000px) rotateY(-10deg);
+    transition: var(--transition);
+}
+
+.hero-image img:hover {
+    transform: perspective(1000px) rotateY(0deg);
+}
+
+/* ===== Features Section ===== */
+.features {
+    padding: 80px 0;
+    background-color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.features h2 {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 2.2rem;
+    color: var(--dark-color);
+    position: relative;
+}
+
+.features h2::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+    margin: 15px auto 0;
+    border-radius: 2px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Make feature cards clickable */
+.features-grid a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.feature-card {
+    background-color: white;
+    padding: 40px 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    text-align: center;
+    border: 1px solid rgba(74, 144, 226, 0.1);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(74, 144, 226, 0.15);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(74, 144, 226, 0.2) 100%);
+    border-radius: 50%;
+}
+
+.feature-icon img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.feature-card h3 {
+    margin-bottom: 15px;
+    color: var(--dark-color);
+    font-size: 1.4rem;
+}
+
+.feature-card p {
+    color: var(--secondary-color);
+    line-height: 1.6;
+}
+
+/* ===== Activity Card Specific Styles ===== */
+.feature-card.activity-card {
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(74, 144, 226, 0.1) 100%);
+    border-left: 4px solid var(--primary-color);
+}
+
+.feature-card.activity-card .feature-icon {
+    background: rgba(74, 144, 226, 0.1);
+    border: 2px dashed rgba(74, 144, 226, 0.3);
+}
+
+/* ===== Footer Styles ===== */
+.footer-logo {
+    height: 30px;
+    margin-bottom: 15px;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+    .hero {
+        padding: 60px 0;
+    }
+    
+    .hero .container {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 30px;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .hero-image img {
+        transform: none;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-card.activity-card {
+        border-left: none;
+        border-top: 4px solid var(--primary-color);
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .hero-buttons a {
+        width: 100%;
+    }
+}
+/* ===== Tracking Modal Styles ===== */
+.tracking-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tracking-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem 0;
+}
+
+.tracking-stats .stat {
+    font-size: 1.2rem;
+}
+
+.tracking-stats .stat span {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #4a90e2;
+    display: block;
+}
+
+.tracking-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+    border: none;
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+/* Button hover effects */
+.btn-primary:hover, 
+.btn-secondary:hover, 
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Make feature cards clickable */
+.features-grid a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}

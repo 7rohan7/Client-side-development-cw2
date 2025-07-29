@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - FitTrack Pro</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header class="auth-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="FitTrack Pro Logo">
+            </a>
+        </div>
+    </header>
+
+    <main class="auth-main">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1>Create Your Account</h1>
+                <p>Join our community today</p>
+            </div>
+            
+            <form id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required minlength="3" aria-required="true">
+                    <div class="error-message" id="nameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required aria-required="true">
+                    <div class="error-message" id="emailError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required minlength="8" aria-required="true">
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" required minlength="8" aria-required="true">
+                    <div class="error-message" id="confirmError"></div>
+                </div>
+
+                <!-- New Health Information Fields -->
+                <div class="form-group">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" id="height" min="100" max="250" required>
+                    <div class="error-message" id="heightError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" id="weight" min="30" max="200" step="0.1" required>
+                    <div class="error-message" id="weightError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" min="12" max="120" required>
+                    <div class="error-message" id="ageError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                    </select>
+                    <div class="error-message" id="genderError"></div>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="terms" required aria-required="true">
+                    <label for="terms">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+                    <div class="error-message" id="termsError"></div>
+                </div>
+                
+                <button type="submit" class="btn-auth">Create Account</button>
+                
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="login.html">Log in</a></p>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

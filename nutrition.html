@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Tracker - FitTrack Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/nutrition.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* Navigation */
+        .main-nav ul {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .main-nav > ul > li > a {
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-nav > ul > li > a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .main-nav > ul > li > a.active {
+            background-color: var(--primary-color);
+            position: relative;
+        }
+
+        .main-nav > ul > li > a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 15px;
+            right: 15px;
+            height: 3px;
+            background: var(--light-color);
+            border-radius: 3px;
+        }
+
+        /* User Menu Dropdown */
+        .user-menu {
+            position: relative;
+        }
+
+        .dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            min-width: 180px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 10px 0;
+            display: none;
+            z-index: 100;
+        }
+
+        .user-menu:hover .dropdown {
+            display: block;
+        }
+
+        .dropdown a {
+            color: var(--dark-color);
+            padding: 8px 16px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown a:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .nutrition-main {
+            padding: 40px 0;
+            background-color: #f5f7fa;
+        }
+
+        /* Summary Card */
+        .nutrition-summary {
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 25px;
+        }
+
+        .summary-card h2 {
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+
+        .macros {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .macro {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .macro-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .macro-icon.calories { background-color: var(--accent-color); }
+        .macro-icon.protein { background-color: var(--primary-color); }
+        .macro-icon.carbs { background-color: #f39c12; }
+        .macro-icon.fats { background-color: #2ecc71; }
+
+        .macro-info h3 {
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .macro-info p {
+            margin-bottom: 8px;
+            color: #7f8c8d;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Nutrition Log */
+        .nutrition-log {
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            color: var(--secondary-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .meals-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .meal-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .meal-header {
+            padding: 15px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meal-header h3 {
+            margin: 0;
+        }
+
+        .meal-calories {
+            font-weight: bold;
+        }
+
+        .food-list {
+            padding: 15px;
+        }
+
+        .food-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .food-list li:last-child {
+            border-bottom: none;
+        }
+
+        .food-name {
+            flex: 1;
+        }
+
+        .food-amount {
+            margin: 0 10px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .food-calories {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .delete-food {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .empty-message {
+            color: #7f8c8d;
+            text-align: center;
+            padding: 20px 0;
+            font-style: italic;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--secondary-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        .input-with-unit {
+            display: flex;
+        }
+
+        .input-with-unit input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right: none;
+        }
+
+        .input-with-unit select {
+            width: auto;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .error-message {
+            color: var(--accent-color);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        .invalid {
+            border-color: var(--accent-color);
+        }
+
+        .valid {
+            border-color: #2ecc71;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background-color: #7f8c8d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #6c757d;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 6px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: #2ecc71;
+        }
+
+        .notification.error {
+            background-color: var(--accent-color);
+        }
+
+        /* Footer */
+        .main-footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 40px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            height: 30px;
+            margin-bottom: 15px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-section a {
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-bottom p {
+            margin-bottom: 10px;
+        }
+
+        .footer-bottom a {
+            color: var(--primary-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-nav {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--secondary-color);
+                padding: 20px;
+                display: none;
+            }
+            
+            .main-nav.active {
+                display: block;
+            }
+            
+            .main-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .user-menu {
+                position: static;
+            }
+            
+            .dropdown {
+                position: static;
+                box-shadow: none;
+                background: rgba(0,0,0,0.1);
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="FitTrack Pro Logo">
+                <span>FitTrack Pro</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="main-nav" id="mainNav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="workout.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
+                    <li><a href="nutrition.html" class="active"><i class="fas fa-utensils"></i> Nutrition</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li class="user-menu">
+                        <a href="profile.html" id="userProfileLink"><i class="fas fa-user-circle"></i> 
+                            <span id="userName">Profile</span>
+                        </a>
+                        <ul class="dropdown">
+                            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="nutrition-main">
+        <div class="container">
+            <div id="notification" class="notification" role="alert" aria-live="assertive"></div>
+            
+            <section class="nutrition-summary" aria-labelledby="nutritionSummaryHeading">
+                <div class="summary-card">
+                    <h2 id="nutritionSummaryHeading">Today's Nutrition</h2>
+                    <div class="macros">
+                        <div class="macro" role="region" aria-label="Calories tracking">
+                            <div class="macro-icon calories" aria-hidden="true">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="macro-info">
+                                <h3>Calories</h3>
+                                <p><span id="caloriesConsumed">0</span>/<span id="caloriesGoal">2000</span> kcal</p>
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="2000">
+                                    <div class="progress-fill" id="caloriesProgress"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="macro" role="region" aria-label="Protein tracking">
+                            <div class="macro-icon protein" aria-hidden="true">
+                                <i class="fas fa-drumstick-bite"></i>
+                            </div>
+                            <div class="macro-info">
+                                <h3>Protein</h3>
+                                <p><span id="proteinConsumed">0</span>/<span id="proteinGoal">150</span> g</p>
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="150">
+                                    <div class="progress-fill" id="proteinProgress"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="macro" role="region" aria-label="Carbohydrates tracking">
+                            <div class="macro-icon carbs" aria-hidden="true">
+                                <i class="fas fa-bread-slice"></i>
+                            </div>
+                            <div class="macro-info">
+                                <h3>Carbs</h3>
+                                <p><span id="carbsConsumed">0</span>/<span id="carbsGoal">250</span> g</p>
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="250">
+                                    <div class="progress-fill" id="carbsProgress"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="macro" role="region" aria-label="Fats tracking">
+                            <div class="macro-icon fats" aria-hidden="true">
+                                <i class="fas fa-cheese"></i>
+                            </div>
+                            <div class="macro-info">
+                                <h3>Fats</h3>
+                                <p><span id="fatsConsumed">0</span>/<span id="fatsGoal">70</span> g</p>
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="70">
+                                    <div class="progress-fill" id="fatsProgress"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="nutrition-log" aria-labelledby="foodDiaryHeading">
+                <div class="section-header">
+                    <h2 id="foodDiaryHeading">Food Diary</h2>
+                    <button id="addFoodBtn" class="btn-primary" aria-label="Add new food item">
+                        <i class="fas fa-plus" aria-hidden="true"></i> Add Food
+                    </button>
+                </div>
+                
+                <div class="meals-container">
+                    <div class="meal-card" role="region" aria-labelledby="breakfastHeading">
+                        <div class="meal-header">
+                            <h3 id="breakfastHeading">Breakfast</h3>
+                            <span class="meal-calories">0 kcal</span>
+                        </div>
+                        <ul class="food-list" id="breakfastList" aria-label="Breakfast items">
+                            <li class="empty-message">No foods added yet</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="meal-card" role="region" aria-labelledby="lunchHeading">
+                        <div class="meal-header">
+                            <h3 id="lunchHeading">Lunch</h3>
+                            <span class="meal-calories">0 kcal</span>
+                        </div>
+                        <ul class="food-list" id="lunchList" aria-label="Lunch items">
+                            <li class="empty-message">No foods added yet</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="meal-card" role="region" aria-labelledby="dinnerHeading">
+                        <div class="meal-header">
+                            <h3 id="dinnerHeading">Dinner</h3>
+                            <span class="meal-calories">0 kcal</span>
+                        </div>
+                        <ul class="food-list" id="dinnerList" aria-label="Dinner items">
+                            <li class="empty-message">No foods added yet</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="meal-card" role="region" aria-labelledby="snacksHeading">
+                        <div class="meal-header">
+                            <h3 id="snacksHeading">Snacks</h3>
+                            <span class="meal-calories">0 kcal</span>
+                        </div>
+                        <ul class="food-list" id="snacksList" aria-label="Snack items">
+                            <li class="empty-message">No foods added yet</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Add Food Modal -->
+    <div id="foodModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Food Item</h3>
+                <button class="close-modal" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="foodForm" novalidate>
+                    <div class="form-group">
+                        <label for="foodName">Food Name*</label>
+                        <input type="text" id="foodName" required aria-required="true">
+                        <div class="error-message" id="foodNameError" role="alert"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="foodMeal">Meal*</label>
+                            <select id="foodMeal" required aria-required="true">
+                                <option value="" disabled selected>Select meal</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="snacks">Snacks</option>
+                            </select>
+                            <div class="error-message" id="foodMealError" role="alert"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="foodAmount">Amount*</label>
+                            <div class="input-with-unit">
+                                <input type="number" id="foodAmount" min="1" required aria-required="true">
+                                <select id="foodUnit" aria-label="Unit of measurement">
+                                    <option value="g">g</option>
+                                    <option value="ml">ml</option>
+                                    <option value="serving">serving</option>
+                                </select>
+                            </div>
+                            <div class="error-message" id="foodAmountError" role="alert"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="foodCalories">Calories*</label>
+                            <input type="number" id="foodCalories" min="1" required aria-required="true">
+                            <div class="error-message" id="foodCaloriesError" role="alert"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="foodProtein">Protein (g)</label>
+                            <input type="number" id="foodProtein" min="0" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="foodCarbs">Carbs (g)</label>
+                            <input type="number" id="foodCarbs" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="foodFats">Fats (g)</label>
+                            <input type="number" id="foodFats" min="0" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save" aria-hidden="true"></i> Save Food
+                        </button>
+                        <button type="button" class="btn-secondary close-modal">
+                            <i class="fas fa-times" aria-hidden="true"></i> Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="images/logo-small.png" alt="FitTrack Pro Logo" class="footer-logo">
+                    <p>Your complete health and fitness tracking solution.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="workout.html">Workouts</a></li>
+                        <li><a href="nutrition.html">Nutrition</a></li>
+                        <li><a href="about.html">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> support@fittrackpro.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (800) FIT-TRACK</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FitTrack Pro. All rights reserved.</p>
+                <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    $(document).ready(function() {
+        // Check authentication
+        const currentUser = JSON.parse(localStorage.getItem('fitTrackCurrentUser'));
+        if (!currentUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Set username if available
+        if (currentUser.name) {
+            $('#userName').text(currentUser.name);
+        }
+
+        // Nutrition data structure
+        let nutritionData = {
+            calories: { consumed: 0, goal: 2000 },
+            protein: { consumed: 0, goal: 150 },
+            carbs: { consumed: 0, goal: 250 },
+            fats: { consumed: 0, goal: 70 },
+            meals: {
+                breakfast: [],
+                lunch: [],
+                dinner: [],
+                snacks: []
+            }
+        };
+        
+        // Load saved data from localStorage
+        function loadNutritionData() {
+            const savedData = localStorage.getItem('fitTrackNutritionData');
+            if (savedData) {
+                nutritionData = JSON.parse(savedData);
+                updateNutritionSummary();
+                updateMealLists();
+            }
+        }
+        
+        // Save data to localStorage
+        function saveNutritionData() {
+            localStorage.setItem('fitTrackNutritionData', JSON.stringify(nutritionData));
+        }
+        
+        // Update the nutrition summary cards
+        function updateNutritionSummary() {
+            $('#caloriesConsumed').text(nutritionData.calories.consumed);
+            $('#proteinConsumed').text(nutritionData.protein.consumed);
+            $('#carbsConsumed').text(nutritionData.carbs.consumed);
+            $('#fatsConsumed').text(nutritionData.fats.consumed);
+            
+            // Update progress bars
+            updateProgressBar('calories');
+            updateProgressBar('protein');
+            updateProgressBar('carbs');
+            updateProgressBar('fats');
+        }
+        
+        function updateProgressBar(type) {
+            const progress = (nutritionData[type].consumed / nutritionData[type].goal) * 100;
+            const element = $(`#${type}Progress`);
+            element.css('width', `${Math.min(100, progress)}%`);
+            element.parent().attr('aria-valuenow', nutritionData[type].consumed);
+        }
+        
+        // Update the meal lists
+        function updateMealLists() {
+            updateMealList('breakfast');
+            updateMealList('lunch');
+            updateMealList('dinner');
+            updateMealList('snacks');
+        }
+        
+        function updateMealList(mealType) {
+            const mealList = $(`#${mealType}List`);
+            const meals = nutritionData.meals[mealType];
+            
+            // Clear existing items except the empty message
+            const emptyMessage = mealList.find('.empty-message');
+            mealList.empty();
+            if (emptyMessage.length) mealList.append(emptyMessage);
+            
+            if (meals.length === 0) {
+                if (!emptyMessage.length) {
+                    mealList.append($('<li>').addClass('empty-message').text('No foods added yet'));
+                }
+                return;
+            }
+            
+            // Remove empty message if there are items
+            if (emptyMessage.length) emptyMessage.remove();
+            
+            // Calculate total calories for this meal
+            let mealCalories = 0;
+            
+            // Add each food item
+            meals.forEach((food, index) => {
+                mealCalories += food.calories;
+                
+                const li = $('<li>').html(`
+                    <span class="food-name">${food.name}</span>
+                    <span class="food-amount">${food.amount}${food.unit}</span>
+                    <span class="food-calories">${food.calories} kcal</span>
+                    <button class="delete-food" data-meal="${mealType}" data-index="${index}" aria-label="Delete ${food.name}">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                    </button>
+                `);
+                mealList.append(li);
+            });
+            
+            // Update meal calories in header
+            const mealHeader = $(`#${mealType}List`).closest('.meal-card').find('.meal-calories');
+            if (mealHeader.length) {
+                mealHeader.text(`${mealCalories} kcal`);
+            }
+        }
+        
+        // Modal functions
+        function openModal() {
+            $('#foodModal').css('display', 'flex');
+            $('body').css('overflow', 'hidden');
+            $('#foodName').focus();
+        }
+        
+        function closeModal() {
+            $('#foodModal').hide();
+            $('body').css('overflow', 'auto');
+            $('#foodForm')[0].reset();
+            clearErrors();
+        }
+        
+        // Form validation
+        function validateField(fieldId) {
+            const field = $(`#${fieldId}`);
+            const errorElement = $(`#${fieldId}Error`);
+            
+            if (!field.length) return true;
+            
+            let isValid = true;
+            let errorMessage = '';
+            
+            // Check required fields
+            if (field.prop('required') && !field.val().trim()) {
+                isValid = false;
+                errorMessage = 'This field is required';
+            }
+            
+            // Field-specific validation
+            if (isValid) {
+                switch(fieldId) {
+                    case 'foodAmount':
+                    case 'foodCalories':
+                        if (parseInt(field.val()) < 1) {
+                            isValid = false;
+                            errorMessage = 'Value must be at least 1';
+                        }
+                        break;
+                }
+            }
+            
+            // Update UI
+            if (isValid) {
+                field.removeClass('invalid').addClass('valid');
+                errorElement.text('').removeClass('visible');
+            } else {
+                field.removeClass('valid').addClass('invalid');
+                errorElement.text(errorMessage).addClass('visible');
+            }
+            
+            return isValid;
+        }
+
+        function clearErrors() {
+            ['foodName', 'foodMeal', 'foodAmount', 'foodCalories'].forEach(fieldId => {
+                $(`#${fieldId}`).removeClass('invalid valid');
+                $(`#${fieldId}Error`).text('').removeClass('visible');
+            });
+        }
+
+        function validateForm() {
+            let isValid = true;
+            
+            // Validate each field
+            ['foodName', 'foodMeal', 'foodAmount', 'foodCalories'].forEach(fieldId => {
+                if (!validateField(fieldId)) {
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
+        }
+        
+        // Event Listeners
+        $('#addFoodBtn').on('click', openModal);
+        
+        $('.close-modal').on('click', closeModal);
+        
+        // Close modal when clicking outside
+        $('#foodModal').on('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Real-time validation
+        $('#foodName, #foodMeal, #foodAmount, #foodCalories').on('input blur', function() {
+            validateField(this.id);
+        });
+        
+        // Form submission
+        $('#foodForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                showNotification('Please correct the errors in the form', 'error');
+                return;
+            }
+            
+            const foodItem = {
+                name: $('#foodName').val().trim(),
+                meal: $('#foodMeal').val(),
+                amount: $('#foodAmount').val(),
+                unit: $('#foodUnit').val(),
+                calories: parseInt($('#foodCalories').val()),
+                protein: parseInt($('#foodProtein').val()) || 0,
+                carbs: parseInt($('#foodCarbs').val()) || 0,
+                fats: parseInt($('#foodFats').val()) || 0,
+                date: new Date().toISOString()
+            };
+            
+            // Add to nutrition data
+            nutritionData.meals[foodItem.meal].push(foodItem);
+            nutritionData.calories.consumed += foodItem.calories;
+            nutritionData.protein.consumed += foodItem.protein;
+            nutritionData.carbs.consumed += foodItem.carbs;
+            nutritionData.fats.consumed += foodItem.fats;
+            
+            // Save and update UI
+            saveNutritionData();
+            updateNutritionSummary();
+            updateMealLists();
+            
+            // Show success notification
+            showNotification(`${foodItem.name} added to ${foodItem.meal}!`, 'success');
+            
+            // Close modal
+            closeModal();
+        });
+        
+        // Delete food item
+        $(document).on('click', '.delete-food', function() {
+            const btn = $(this);
+            const mealType = btn.data('meal');
+            const index = parseInt(btn.data('index'));
+            
+            // Get the food item being deleted
+            const foodItem = nutritionData.meals[mealType][index];
+            
+            // Update nutrition data
+            nutritionData.calories.consumed -= foodItem.calories;
+            nutritionData.protein.consumed -= foodItem.protein;
+            nutritionData.carbs.consumed -= foodItem.carbs;
+            nutritionData.fats.consumed -= foodItem.fats;
+            
+            // Remove from array
+            nutritionData.meals[mealType].splice(index, 1);
+            
+            // Save and update UI
+            saveNutritionData();
+            updateNutritionSummary();
+            updateMealLists();
+            
+            // Show notification
+            showNotification(`${foodItem.name} removed from ${mealType}!`, 'success');
+        });
+        
+        // Notification function
+        function showNotification(message, type) {
+            const icon = type === 'success' ? 'fa-check-circle' : 
+                         type === 'error' ? 'fa-exclamation-circle' : 
+                         'fa-info-circle';
+            
+            $('#notification').html(`
+                <i class="fas ${icon}" aria-hidden="true"></i>
+                <span>${message}</span>
+            `).removeClass().addClass(`notification ${type} show`)
+              .attr('aria-live', 'assertive');
+            
+            setTimeout(() => {
+                $('#notification').removeClass('show');
+            }, 3000);
+        }
+        
+        // Mobile menu toggle
+        $('#mobileMenuBtn').on('click', function() {
+            $('#mainNav').toggleClass('active');
+            $(this).attr('aria-expanded', $('#mainNav').hasClass('active'));
+        });
+        
+        // Logout functionality
+        $('#logoutLink').on('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('fitTrackCurrentUser');
+            window.location.href = 'login.html';
+        });
+        
+        // Initialize
+        loadNutritionData();
+    });
+    </script>
+</body>
+</html>
