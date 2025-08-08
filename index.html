@@ -1,706 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitTrack Pro - Fitness Health Tracker</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            background-color: #f5f7fa;
-            color: #333;
-        }
-        
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        ul {
-            list-style: none;
-        }
-        
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        /* Header Styles */
-        .main-header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .logo img {
-            height: 40px;
-            width: auto;
-            margin-right: 10px;
-        }
-        
-        /* Navigation */
-        .main-nav ul {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        
-        .main-nav a {
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        
-        .main-nav a:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-        
-        .main-nav a.active {
-            background-color: #3498db;
-        }
-        
-        .btn-signup {
-            padding: 8px 15px;
-            background-color: #3498db;
-            color: white;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: background-color 0.3s;
-        }
-        
-        .btn-signup:hover {
-            background-color: #2980b9;
-        }
-        
-        /* Mobile Menu Button */
-        .mobile-menu-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: none;
-        }
-        
-        /* Hero Section */
-        .hero {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #3498db, #2c3e50);
-            color: white;
-        }
-        
-        .hero .container {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-        }
-        
-        .hero-content {
-            flex: 1;
-        }
-        
-        .hero-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-        
-        .hero-content p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        .hero-image {
-            flex: 1;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .hero-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        /* Button Styles */
-        .btn-primary {
-            padding: 12px 25px;
-            background-color: #2ecc71;
-            color: white;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary:hover {
-            background-color: #27ae60;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
-        }
-        
-        .btn-secondary {
-            padding: 12px 25px;
-            background-color: transparent;
-            color: white;
-            border: 2px solid white;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-        }
-        
-        .btn-secondary:hover {
-            background-color: rgba(255,255,255,0.1);
-            transform: translateY(-2px);
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 15px;
-        }
-        
-        /* Features Section */
-        .features {
-            padding: 80px 0;
-        }
-        
-        .features h2 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 50px;
-            color: #2c3e50;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .feature-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f5f7fa;
-            border-radius: 50%;
-        }
-        
-        .feature-icon img {
-            max-width: 50px;
-            max-height: 50px;
-        }
-        
-        .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-        
-        .feature-card p {
-            color: #7f8c8d;
-            line-height: 1.6;
-        }
-        
-        /* Tracking Modal */
-        .tracking-modal {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            padding: 20px;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            max-width: 300px;
-        }
-        
-        .tracking-modal:not(.hidden) {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .tracking-modal h3 {
-            margin-bottom: 15px;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .tracking-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .tracking-stats .stat {
-            text-align: center;
-        }
-        
-        .tracking-stats span {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #2c3e50;
-            display: block;
-        }
-        
-        .tracking-stats small {
-            font-size: 0.8rem;
-            color: #7f8c8d;
-        }
-        
-        .tracking-controls {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .btn-danger {
-            padding: 8px 15px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-danger:hover {
-            background-color: #c0392b;
-        }
-        
-        /* Footer */
-        .main-footer {
-            background-color: #2c3e50;
-            color: white;
-            padding: 40px 0 20px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .footer-logo {
-            height: 30px;
-            width: auto;
-            margin-bottom: 15px;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .social-links a {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
-        
-        .social-links a:hover {
-            background-color: rgba(255,255,255,0.2);
-        }
-        
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .footer-bottom p {
-            margin-bottom: 10px;
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            .hero .container {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .hero-buttons {
-                justify-content: center;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .main-nav ul {
-                position: fixed;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background: #2c3e50;
-                flex-direction: column;
-                padding: 20px;
-                gap: 15px;
-                display: none;
-            }
-            
-            .main-nav ul.active {
-                display: flex;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .hero {
-                padding: 60px 0;
-            }
-            
-            .hero-content h1 {
-                font-size: 2rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .btn-primary, .btn-secondary {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitTrack Pro - Fitness Health Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="styles/index.css"/>
+  <!-- jQuery CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    
-    <header class="main-header">
-        <div class="container header-container">
-            <a href="index.html" class="logo">
-                <img src="images/logo.png" alt="FitTrack Pro Logo">
-                <span>FitTrack Pro</span>
-            </a>
-            
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <nav class="main-nav" id="mainNav">
-                <ul>
-                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-                    <li><a href="workout.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
-                    <li><a href="nutrition.html"><i class="fas fa-utensils"></i> Nutrition</a></li>
-                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
-                    <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-                    <li><a href="signup.html" class="btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <main id="main-content">
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1>Transform Your Health Journey</h1>
-                    <p>Track workouts, monitor nutrition, and achieve your fitness goals with our comprehensive health tracker</p>
-                    <div class="hero-buttons">
-                        <a href="dashboard.html" class="btn-primary">
-                            <i class="fas fa-play"></i> Start Tracking Now
-                        </a>
-                        <a href="#features" class="btn-secondary">Learn More</a>
-                    </div>
-                </div>
-                <div class="hero-image">
-                    <img src="images/hero-banner.jpg" alt="Fitness tracking app screenshot">
-                </div>
-            </div>
-        </section>
+  <header class="main-header">
+    <div class="container header-container">
+      <a href="index.html" class="logo">
+        <img src="images/logo.png" alt="FitTrack Pro Logo"/>
+        <span>FitTrack Pro</span>
+      </a>
 
-        <section id="features" class="features">
-            <div class="container">
-                <h2>Key Features</h2>
-                <div class="features-grid">
-                    <a href="dashboard.html" class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-running" style="color: #3498db; font-size: 2rem;"></i>
-                        </div>
-                        <h3>Activity Tracking</h3>
-                        <p>Monitor steps, distance, calories burned and active minutes</p>
-                    </a>
-                    
-                    <a href="workout.html" class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-dumbbell" style="color: #3498db; font-size: 2rem;"></i>
-                        </div>
-                        <h3>Workout Log</h3>
-                        <p>Record and analyze your workouts</p>
-                    </a>
-                    
-                    <a href="nutrition.html" class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-utensils" style="color: #3498db; font-size: 2rem;"></i>
-                        </div>
-                        <h3>Nutrition Diary</h3>
-                        <p>Track your meals and macros</p>
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
 
-    <!-- Tracking Modal -->
-    <div id="trackingModal" class="tracking-modal hidden">
-        <div class="modal-content">
-            <h3><i class="fas fa-running"></i> Activity Tracking</h3>
-            <div class="tracking-stats">
-                <div class="stat">
-                    <span id="trackingTime">00:00:00</span>
-                    <small>Duration</small>
-                </div>
-                <div class="stat">
-                    <span id="trackingSteps">0</span>
-                    <small>Steps</small>
-                </div>
-                <div class="stat">
-                    <span id="trackingCalories">0</span>
-                    <small>Calories</small>
-                </div>
-            </div>
-            <div class="tracking-controls">
-                <button id="pauseTrackingBtn" class="btn-secondary">
-                    <i class="fas fa-pause"></i> Pause
-                </button>
-                <button id="stopTrackingBtn" class="btn-danger">
-                    <i class="fas fa-stop"></i> Stop
-                </button>
-            </div>
-        </div>
+      <nav class="main-nav" id="mainNav">
+        <ul>
+          <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+          <li><a href="workout.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
+          <li><a href="nutrition.html"><i class="fas fa-utensils"></i> Nutrition</a></li>
+          <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
+          <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+          <li><a href="signup.html" class="btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <footer class="main-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <img src="images/logo-small.png" alt="FitTrack Pro Logo" class="footer-logo">
-                    <p>Your complete health and fitness tracking solution.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="dashboard.html">Dashboard</a></li>
-                        <li><a href="workout.html">Workouts</a></li>
-                        <li><a href="nutrition.html">Nutrition</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <p><i class="fas fa-envelope"></i> support@fittrackpro.com</p>
-                    <p><i class="fas fa-phone"></i> +1 (800) FIT-TRACK</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 FitTrack Pro. All rights reserved.</p>
-                <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
-            </div>
+  <main id="main-content">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Transform Your Health Journey</h1>
+          <p>Track workouts, monitor nutrition, and achieve your fitness goals with our comprehensive health tracker</p>
+          <div class="hero-buttons">
+            <a href="dashboard.html" class="btn-primary">
+              <i class="fas fa-play"></i> Start Tracking Now
+            </a>
+            <a href="#features" class="btn-secondary">Learn More</a>
+          </div>
         </div>
-    </footer>
+        <div class="hero-image">
+          <img src="images/hero-banner.jpg" alt="Fitness tracking app screenshot"/>
+        </div>
+      </div>
+    </section>
 
-    <script>
-    $(document).ready(function() {
-        // Mobile menu toggle
-        $('#mobileMenuBtn').on('click', function() {
-            $('#mainNav ul').slideToggle(300);
-            $(this).attr('aria-expanded', $('#mainNav ul').is(':visible'));
-        });
+    <section id="features" class="features">
+      <div class="container">
+        <h2>Key Features</h2>
+        <div class="features-grid">
+          <a href="dashboard.html" class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-running" style="color: #3498db; font-size: 2rem;"></i>
+            </div>
+            <h3>Activity Tracking</h3>
+            <p>Monitor steps, distance, calories burned and active minutes</p>
+          </a>
+          <a href="workout.html" class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-dumbbell" style="color: #3498db; font-size: 2rem;"></i>
+            </div>
+            <h3>Workout Log</h3>
+            <p>Record and analyze your workouts</p>
+          </a>
+          <a href="nutrition.html" class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-utensils" style="color: #3498db; font-size: 2rem;"></i>
+            </div>
+            <h3>Nutrition Diary</h3>
+            <p>Track your meals and macros</p>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
 
-        // Smooth scrolling for anchor links
-        $('a[href^="#"]').on('click', function(e) {
-            const href = $(this).attr('href');
-            if (href !== '#') {
-                e.preventDefault();
-                const target = $(href);
-                if (target.length) {
-                    $('html, body').animate({
-                        scrollTop: target.offset().top - 70
-                    }, 800);
-                }
-            }
-        });
+  <!-- Tracking Modal -->
+  <div id="trackingModal" class="tracking-modal hidden">
+    <div class="modal-content">
+      <h3><i class="fas fa-running"></i> Activity Tracking</h3>
+      <div class="tracking-stats">
+        <div class="stat">
+          <span id="trackingTime">00:00:00</span>
+          <small>Duration</small>
+        </div>
+        <div class="stat">
+          <span id="trackingSteps">0</span>
+          <small>Steps</small>
+        </div>
+        <div class="stat">
+          <span id="trackingCalories">0</span>
+          <small>Calories</small>
+        </div>
+      </div>
+      <div class="tracking-controls">
+        <button id="pauseTrackingBtn" class="btn-secondary">
+          <i class="fas fa-pause"></i> Pause
+        </button>
+        <button id="stopTrackingBtn" class="btn-danger">
+          <i class="fas fa-stop"></i> Stop
+        </button>
+      </div>
+    </div>
+  </div>
 
-        // Feature card animations
-        $('.feature-card').hover(
-            function() {
-                $(this).stop().animate({ 
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
-                }, 200);
-            },
-            function() {
-                $(this).stop().animate({ 
-                    transform: 'translateY(0)',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
-                }, 200);
-            }
-        );
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <img src="images/logo-small.png" alt="FitTrack Pro Logo" class="footer-logo"/>
+          <p>Your complete health and fitness tracking solution.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="workout.html">Workouts</a></li>
+            <li><a href="nutrition.html">Nutrition</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p><i class="fas fa-envelope"></i> support@fittrackpro.com</p>
+          <p><i class="fas fa-phone"></i> +1 (800) FIT-TRACK</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 FitTrack Pro. All rights reserved.</p>
+        <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+      </div>
+    </div>
+  </footer>
 
-        // Hero section fade-in animation
-        $('.hero-content, .hero-image').hide().fadeIn(1000);
-
-        // Feature cards staggered animation
-        $('.feature-card').each(function(index) {
-            $(this).hide().delay(index * 200).fadeIn(500);
-        });
-
-        // Tracking modal functionality
-        let timerInterval;
-        let isTracking = false;
-        
-        function startTracking() {
-            $('#trackingModal').removeClass('hidden');
-            isTracking = true;
-            
-            let seconds = 0;
-            timerInterval = setInterval(() => {
-                seconds++;
-                $('#trackingTime').text(
-                    new Date(seconds * 1000).toISOString().substr(11, 8)
-                );
-                $('#trackingSteps').text(Math.floor(seconds * 1.5));
-                $('#trackingCalories').text(Math.floor(seconds * 0.2));
-            }, 1000);
-        }
-        
-        function stopTracking() {
-            clearInterval(timerInterval);
-            $('#trackingModal').addClass('hidden');
-            isTracking = false;
-        }
-
-        // Start tracking when clicking the primary button
-        $('.btn-primary').on('click', function(e) {
-            if (!isTracking) {
-                e.preventDefault();
-                startTracking();
-                // Navigate after starting tracking
-                setTimeout(() => {
-                    window.location.href = $(this).attr('href');
-                }, 500);
-            }
-        });
-
-        $('#pauseTrackingBtn').on('click', function() {
-            if (isTracking) {
-                clearInterval(timerInterval);
-                isTracking = false;
-                $(this).html('<i class="fas fa-play"></i> Resume');
-            } else {
-                startTracking();
-                $(this).html('<i class="fas fa-pause"></i> Pause');
-            }
-        });
-
-        $('#stopTrackingBtn').on('click', stopTracking);
-
-        // Active link highlighting
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-        $('.main-nav a').each(function() {
-            const linkPage = $(this).attr('href');
-            if (currentPage === linkPage) {
-                $(this).addClass('active');
-            } else {
-                $(this).removeClass('active');
-            }
-        });
-    });
-    </script>
+  <!-- jQuery logic for interactivity -->
+  <script> src="js/index.js"</script>
 </body>
 </html>
