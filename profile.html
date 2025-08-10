@@ -1,459 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - FitTrack Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            background-color: #f5f7fa;
-            color: #333;
-        }
-        
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        ul {
-            list-style: none;
-        }
-        
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        /* Header Styles */
-        .main-header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .logo img {
-            height: 40px;
-            width: auto;
-            margin-right: 10px;
-        }
-        
-        /* Navigation */
-        .main-nav ul {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .main-nav a {
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        
-        .main-nav a:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-        
-        .main-nav a.active {
-            background-color: #3498db;
-        }
-        
-        .user-menu {
-            position: relative;
-        }
-        
-        .dropdown {
-            position: absolute;
-            right: 0;
-            background: white;
-            min-width: 160px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            border-radius: 4px;
-            padding: 10px 0;
-            display: none;
-        }
-        
-        .user-menu:hover .dropdown {
-            display: block;
-        }
-        
-        .dropdown a {
-            color: #333;
-            padding: 8px 16px;
-            display: block;
-        }
-        
-        .dropdown a:hover {
-            background-color: #f5f5f5;
-        }
-        
-        /* Main Content */
-        .profile-main {
-            padding: 40px 0;
-        }
-        
-        .profile-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .profile-header {
-            display: flex;
-            padding: 30px;
-            background: linear-gradient(135deg, #3498db, #2c3e50);
-            color: white;
-        }
-        
-        .profile-avatar {
-            position: relative;
-            margin-right: 30px;
-        }
-        
-        .profile-avatar img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid white;
-        }
-        
-        .avatar-upload-btn {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #3498db;
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .profile-info {
-            flex: 1;
-        }
-        
-        .profile-stats {
-            display: flex;
-            margin-top: 20px;
-        }
-        
-        .stat-item {
-            margin-right: 30px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            display: block;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        /* Tabs */
-        .profile-tabs {
-            display: flex;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .tab-btn {
-            padding: 15px 25px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            color: #7f8c8d;
-            position: relative;
-        }
-        
-        .tab-btn.active {
-            color: #3498db;
-            font-weight: bold;
-        }
-        
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: #3498db;
-        }
-        
-        .tab-content {
-            padding: 30px;
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        /* Forms */
-        .profile-form {
-            max-width: 600px;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            flex: 1;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .modern-input, .modern-select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-        
-        .modern-input:focus, .modern-select:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
-        }
-        
-        textarea.modern-input {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .primary-btn {
-            padding: 12px 25px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .primary-btn:hover {
-            background-color: #2980b9;
-        }
-        
-        /* Activity History */
-        .activity-filters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .activity-list {
-            border: 1px solid #eee;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .activity-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        
-        .activity-type {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .activity-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-        
-        .running .activity-icon { background-color: #e74c3c; }
-        .cycling .activity-icon { background-color: #3498db; }
-        .weight-training .activity-icon { background-color: #f39c12; }
-        
-        /* Footer */
-        .main-footer {
-            background-color: #2c3e50;
-            color: white;
-            padding: 40px 0 20px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .footer-logo {
-            height: 30px;
-            width: auto;
-            margin-bottom: 15px;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .social-links a {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
-        
-        .social-links a:hover {
-            background-color: rgba(255,255,255,0.2);
-        }
-        
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .footer-bottom p {
-            margin-bottom: 10px;
-        }
-        
-        .footer-bottom a {
-            color: #3498db;
-        }
-        
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .slide-down {
-            animation: slideDown 0.3s ease-out;
-        }
-        
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .pulse {
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        /* Accessibility */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: #2c3e50;
-            color: white;
-            padding: 8px;
-            z-index: 100;
-            transition: top 0.3s;
-        }
-        
-        .skip-link:focus {
-            top: 0;
-        }
-        
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - FitTrack Pro</title>
+  <link rel="stylesheet" href="styles/profile.css" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+ <a href="#main-content" class="skip-link">Skip to main content</a>
     
     <header class="main-header">
         <div class="container header-container">
             <a href="index.html" class="logo">
-                <img src="images/logo.png" alt="FitTrack Pro Logo">
+                <img src="images/Head.jpg" alt="FitTrack Pro Logo">
                 <span>FitTrack Pro</span>
             </a>
             
@@ -482,405 +43,162 @@
         </div>
     </header>
 
-    <main class="profile-main" id="main-content">
-        <div class="container">
-            <div id="notification" class="notification-toast"></div>
-            
-            <div class="profile-container">
-                <section class="profile-header">
-                    <div class="profile-avatar">
-                        <img src="images/default-avatar.jpg" alt="User Avatar" id="userAvatar">
-                        <button class="avatar-upload-btn" id="uploadAvatarBtn" aria-label="Upload profile picture">
-                            <i class="fas fa-camera" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div class="profile-info">
-                        <h1 id="profileUserName">User Name</h1>
-                        <p class="member-since" id="memberSince">Member since January 2023</p>
-                        <div class="profile-stats">
-                            <div class="stat-item">
-                                <span class="stat-value" id="totalWorkouts">0</span>
-                                <span class="stat-label">Workouts</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value" id="totalCalories">0</span>
-                                <span class="stat-label">Calories</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value" id="achievements">0</span>
-                                <span class="stat-label">Achievements</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <div role="tablist" class="profile-tabs">
-                    <button role="tab" aria-selected="true" aria-controls="personal-info" class="tab-btn active" data-tab="personal-info">Personal Info</button>
-                    <button role="tab" aria-selected="false" aria-controls="health-data" class="tab-btn" data-tab="health-data">Health Data</button>
-                    <button role="tab" aria-selected="false" aria-controls="activity-history" class="tab-btn" data-tab="activity-history">Activity History</button>
-                </div>
-
-                <div class="tab-content active" id="personal-info" role="tabpanel">
-                    <form id="profileForm" class="profile-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="firstName">First Name</label>
-                                <input type="text" id="firstName" class="modern-input" required aria-required="true">
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName">Last Name</label>
-                                <input type="text" id="lastName" class="modern-input" required aria-required="true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" class="modern-input" required aria-required="true">
-                        </div>
-                        <div class="form-group">
-                            <label for="bio">Bio</label>
-                            <textarea id="bio" class="modern-input" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="primary-btn">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
-                    </form>
-                </div>
-
-                <div class="tab-content" id="health-data" role="tabpanel">
-                    <form id="healthForm" class="profile-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="height">Height (cm)</label>
-                                <input type="number" id="height" class="modern-input" min="100" max="250" required aria-required="true" aria-label="Height in centimeters">
-                            </div>
-                            <div class="form-group">
-                                <label for="weight">Weight (kg)</label>
-                                <input type="number" id="weight" class="modern-input" min="30" max="200" required aria-required="true" aria-label="Weight in kilograms">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="age">Age</label>
-                                <input type="number" id="age" class="modern-input" min="12" max="120" required aria-required="true">
-                            </div>
-                            <div class="form-group">
-                                <label for="gender">Gender</label>
-                                <select id="gender" class="modern-select" required aria-required="true">
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" class="primary-btn">
-                            <i class="fas fa-save"></i> Update Health Data
-                        </button>
-                    </form>
-                </div>
-
-                <div class="tab-content" id="activity-history" role="tabpanel">
-                    <div class="activity-filters">
-                        <label for="activityFilter" class="sr-only">Filter by Activity Type</label>
-                        <select id="activityFilter" class="modern-select" aria-label="Filter activities by type">
-                            <option value="all">All Activities</option>
-                            <option value="running">Running</option>
-                            <option value="cycling">Cycling</option>
-                            <option value="weight-training">Weight Training</option>
-                        </select>
-                        <label for="timeFilter" class="sr-only">Filter by Time Period</label>
-                        <select id="timeFilter" class="modern-select" aria-label="Filter activities by time period">
-                            <option value="7days">Last 7 Days</option>
-                            <option value="30days">Last 30 Days</option>
-                            <option value="all">All Time</option>
-                        </select>
-                    </div>
-                    <div class="activity-list" id="activityList">
-                        <!-- Activity items will be loaded here -->
-                    </div>
-                </div>
-            </div>
+   <main class="profile-main">
+  <div class="container profile-container">
+    
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <img id="userAvatar" src="images/Avatar.jpg" alt="Avatar" />
+      </div>
+      <div class="profile-info">
+        <h1 id="profileUserName">  Your Profile </h1>
+        <p class="member-since" id="memberSince">Member since August 2025</p>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-value" id="totalWorkouts">0</span>
+            <span class="stat-label">Workouts</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="totalCalories">0</span>
+            <span class="stat-label">Calories</span>
+          </div>
         </div>
-    </main>
+      </div>
+    </div>
 
-    <footer class="main-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <img src="images/logo-small.png" alt="FitTrack Pro Logo" class="footer-logo">
-                    <p>Your complete health and fitness tracking solution.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="dashboard.html">Dashboard</a></li>
-                        <li><a href="workout.html">Workouts</a></li>
-                        <li><a href="nutrition.html">Nutrition</a></li>
-                        <li><a href="about.html">About</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <p><i class="fas fa-envelope"></i> support@fittrackpro.com</p>
-                    <p><i class="fas fa-phone"></i> +1 (800) FIT-TRACK</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 FitTrack Pro. All rights reserved.</p>
-                <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
-            </div>
+    <!-- Tabs -->
+    <div class="profile-tabs">
+      <button class="tab-btn active" data-tab="profileTab">Profile</button>
+      <button class="tab-btn" data-tab="healthTab">Health</button>
+      <button class="tab-btn" data-tab="activityTab">Activity</button>
+    </div>
+
+    <!-- Profile Tab -->
+    <div class="tab-content active" id="profileTab">
+      <form id="profileForm" class="profile-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" class="modern-input" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" class="modern-input" required>
+          </div>
         </div>
-    </footer>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="modern-input" required>
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" class="modern-input" rows="3"></textarea>
+        </div>
+        <button type="submit" class="primary-btn">Save Profile</button>
+      </form>
+    </div>
 
-    <script>
-    $(document).ready(function() {
-        // Check authentication
-        const currentUser = JSON.parse(localStorage.getItem('fitTrackCurrentUser'));
-        if (!currentUser) {
-            window.location.href = 'login.html';
-            return;
-        }
+    <!-- Health Tab -->
+    <div class="tab-content" id="healthTab">
+      <form id="healthForm" class="profile-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="height">Height (cm)</label>
+            <input type="number" id="height" class="modern-input" required>
+          </div>
+          <div class="form-group">
+            <label for="weight">Weight (kg)</label>
+            <input type="number" id="weight" class="modern-input" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" class="modern-input" required>
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" class="modern-select" required>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="primary-btn">Save Health Data</button>
+      </form>
+    </div>
 
-        // Initialize elements
-        const $notification = $('#notification');
-        const $profileForm = $('#profileForm');
-        const $healthForm = $('#healthForm');
-        const $tabButtons = $('.tab-btn');
-        const $tabContents = $('.tab-content');
-        const $userNameElement = $('#userName');
-        const $profileUserNameElement = $('#profileUserName');
+    <!-- Activity Tab -->
+    <div class="tab-content" id="activityTab">
+      <div class="activity-filters">
+        <select id="activityFilter" class="modern-select">
+          <option value="all">All</option>
+          <option value="running">Running</option>
+          <option value="cycling">Cycling</option>
+          <option value="weight-training">Weight Training</option>
+        </select>
+        <select id="timeFilter" class="modern-select">
+          <option value="all">All Time</option>
+          <option value="7days">Last 7 Days</option>
+          <option value="30days">Last 30 Days</option>
+        </select>
+      </div>
+      <div id="activityList" class="activity-list">
+        <div class="empty-state">
+          <p>No activity data available.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
 
-        // Apply initial animations
-        $('.profile-container').hide().fadeIn(800);
-        $('.profile-header').addClass('slide-down');
-        $('.profile-tabs').addClass('fade-in');
+<!-- Call-to-Action Section -->
+<section class="cta-section">
+  <h2>Ready to Start Your Fitness Journey?</h2>
+  <div class="cta-buttons">
+    <a href="signup.html" class="btn signup-btn">👤 Sign Up Now</a>
+    <a href="contact.html" class="btn contact-btn">✉ Contact Us</a>
+  </div>
+</section>
 
-        // Load user data
-        if (currentUser) {
-            $userNameElement.text(currentUser.name || 'Profile').hide().fadeIn(500);
-            $profileUserNameElement.text(currentUser.name || 'User Name').hide().fadeIn(500);
-            loadProfileData();
-            loadHealthData();
-            loadActivityStats();
-        }
+  <script src="js/profile.js"></script>
 
-        // Tab switching with animation
-        $tabButtons.on('click', function() {
-            const tabId = $(this).data('tab');
-            
-            // Animate tab change
-            $tabButtons.removeClass('active').attr('aria-selected', 'false');
-            $(this).addClass('active').attr('aria-selected', 'true');
-            
-            $tabContents.removeClass('active').attr('aria-hidden', 'true')
-                .hide().filter('#' + tabId).fadeIn(300, function() {
-                    $(this).addClass('active').attr('aria-hidden', 'false');
-                });
-        });
+  <!-- Footer Section -->
+<footer class="main-footer">
+  <div class="container footer-container">
+    <div class="footer-logo">
+      <p>Your complete health and fitness tracking solution.</p>
+      <div class="social-icons">
+  <a href="#"><i class="fab fa-facebook-f"></i></a>
+  <a href="#"><i class="fab fa-twitter"></i></a>
+  <a href="#"><i class="fab fa-instagram"></i></a>
+</div>
+    </div>
 
-        // Form submissions with animations
-        $profileForm.on('submit', function(e) {
-            e.preventDefault();
-            const profileData = {
-                firstName: $('#firstName').val(),
-                lastName: $('#lastName').val(),
-                email: $('#email').val(),
-                bio: $('#bio').val()
-            };
-            
-            // Add save animation
-            $(this).find('button[type="submit"]').addClass('pulse');
-            
-            saveProfileData(profileData);
-            
-            // Remove animation after delay
-            setTimeout(() => {
-                $(this).find('button[type="submit"]').removeClass('pulse');
-            }, 1500);
-        });
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="workout.html">Workouts</a></li>
+        <li><a href="nutrition.html">Nutrition</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
 
-        $healthForm.on('submit', function(e) {
-            e.preventDefault();
-            const healthData = {
-                height: parseFloat($('#height').val()),
-                weight: parseFloat($('#weight').val()),
-                age: parseInt($('#age').val()),
-                gender: $('#gender').val()
-            };
-            
-            if (validateHealthData(healthData)) {
-                // Add save animation
-                $(this).find('button[type="submit"]').addClass('pulse');
-                
-                saveHealthData(healthData);
-                
-                // Remove animation after delay
-                setTimeout(() => {
-                    $(this).find('button[type="submit"]').removeClass('pulse');
-                }, 1500);
-            }
-        });
+    <div class="footer-contact">
+      <h4>Contact</h4>
+      <p><i class="fas fa-envelope"></i> support@fittrackpro.com</p>
+      <p><i class="fas fa-phone"></i> +1 (800) FIT-TRACK</p>
+    </div>
+  </div>
 
-        // Avatar upload button hover effect
-        $('#uploadAvatarBtn').hover(
-            function() {
-                $(this).animate({ backgroundColor: '#2980b9' }, 200);
-            },
-            function() {
-                $(this).animate({ backgroundColor: '#3498db' }, 200);
-            }
-        );
+  <div class="footer-bottom">
+    <p>&copy; 2025 FitTrack Pro. All rights reserved.</p>
+    <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </div>
+</footer>
 
-        // Load profile data
-        function loadProfileData() {
-            const profileData = JSON.parse(localStorage.getItem('fitTrackProfileData')) || {};
-            $('#firstName').val(profileData.firstName || '');
-            $('#lastName').val(profileData.lastName || '');
-            $('#email').val(profileData.email || '');
-            $('#bio').val(profileData.bio || '');
-        }
-
-        // Load health data
-        function loadHealthData() {
-            const healthData = JSON.parse(localStorage.getItem('fitTrackHealthData')) || {};
-            $('#height').val(healthData.height || '');
-            $('#weight').val(healthData.weight || '');
-            $('#age').val(healthData.age || '');
-            $('#gender').val(healthData.gender || 'male');
-        }
-
-        // Load activity stats with animation
-        function loadActivityStats() {
-            const workouts = JSON.parse(localStorage.getItem('fitTrackWorkouts')) || [];
-            const meals = JSON.parse(localStorage.getItem('fitTrackMeals')) || [];
-            
-            // Animate the numbers counting up
-            $({ count: 0 }).animate({ count: workouts.length }, {
-                duration: 1000,
-                step: function() {
-                    $('#totalWorkouts').text(Math.floor(this.count));
-                }
-            });
-            
-            const totalCalories = workouts.reduce((sum, workout) => sum + (workout.calories || 0), 0);
-            $({ count: 0 }).animate({ count: totalCalories }, {
-                duration: 1000,
-                step: function() {
-                    $('#totalCalories').text(Math.floor(this.count));
-                }
-            });
-            
-            // Simple achievement count based on milestones
-            const achievements = Math.min(Math.floor(workouts.length / 5), 10);
-            $({ count: 0 }).animate({ count: achievements }, {
-                duration: 1000,
-                step: function() {
-                    $('#achievements').text(Math.floor(this.count));
-                }
-            });
-        }
-
-        // Save profile data
-        function saveProfileData(data) {
-            try {
-                localStorage.setItem('fitTrackProfileData', JSON.stringify(data));
-                showNotification('Profile updated successfully!', 'success');
-                const fullName = `${data.firstName} ${data.lastName}`.trim();
-                if (fullName) {
-                    $userNameElement.fadeOut(200, function() {
-                        $(this).text(fullName).fadeIn(200);
-                    });
-                    $profileUserNameElement.fadeOut(200, function() {
-                        $(this).text(fullName).fadeIn(200);
-                    });
-                    const currentUser = JSON.parse(localStorage.getItem('fitTrackCurrentUser'));
-                    if (currentUser) {
-                        currentUser.name = fullName;
-                        localStorage.setItem('fitTrackCurrentUser', JSON.stringify(currentUser));
-                    }
-                }
-            } catch (error) {
-                console.error('Error saving profile data:', error);
-                showNotification('Failed to save profile data', 'error');
-            }
-        }
-
-        // Save health data
-        function saveHealthData(data) {
-            try {
-                localStorage.setItem('fitTrackHealthData', JSON.stringify(data));
-                showNotification('Health data updated successfully!', 'success');
-            } catch (error) {
-                console.error('Error saving health data:', error);
-                showNotification('Failed to save health data', 'error');
-            }
-        }
-
-        // Validate health data
-        function validateHealthData(data) {
-            if (isNaN(data.height) || data.height < 100 || data.height > 250) {
-                showNotification('Please enter a valid height (100-250 cm)', 'error');
-                return false;
-            }
-            if (isNaN(data.weight) || data.weight < 30 || data.weight > 200) {
-                showNotification('Please enter a valid weight (30-200 kg)', 'error');
-                return false;
-            }
-            if (isNaN(data.age) || data.age < 12 || data.age > 120) {
-                showNotification('Please enter a valid age (12-120 years)', 'error');
-                return false;
-            }
-            return true;
-        }
-
-        // Show notification with animation
-        function showNotification(message, type) {
-            const icon = type === 'success' ? 'fa-check-circle' : 
-                         type === 'error' ? 'fa-exclamation-circle' : 
-                         'fa-info-circle';
-            
-            $notification.html(`
-                <i class="fas ${icon}"></i>
-                <span>${message}</span>
-            `).removeClass().addClass(`notification-toast ${type}`)
-              .css('opacity', 0)
-              .slideDown(200)
-              .animate({ opacity: 1 }, 200);
-            
-            setTimeout(() => {
-                $notification.animate({ opacity: 0 }, 200, function() {
-                    $(this).slideUp(200);
-                });
-            }, 3000);
-        }
-
-        // Logout functionality
-        $('#logoutLink').on('click', function(e) {
-            e.preventDefault();
-            showNotification('Logging out...', 'info');
-            setTimeout(() => {
-                localStorage.removeItem('fitTrackCurrentUser');
-                window.location.href = 'login.html';
-            }, 1000);
-        });
-
-        // Mobile menu toggle
-        $('#mobileMenuBtn').on('click', function() {
-            $('#mainNav').slideToggle(300);
-            $(this).attr('aria-expanded', $('#mainNav').is(':visible'));
-        });
-
-        // Image error handling
-        $('img').on('error', function() {
-            console.log('Image failed to load: ' + $(this).attr('src'));
-            $(this).hide();
-        });
-    });
-    </script>
 </body>
 </html>
