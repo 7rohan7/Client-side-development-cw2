@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
         showModal(logMealModal);
     });
 
-    $('#close-workout-modal').on('click', function() {
-        hideModal(addWorkoutModal);
-    });
+    closeWorkoutModalBtn.addEventListener('click', function() {
+        hideModal(addWorkoutModal);
+    });
 
     closeMealModalBtn.addEventListener('click', function() {
         hideModal(logMealModal);
