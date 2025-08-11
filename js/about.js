@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+$(document).ready(function () {
   const teamCards = document.querySelectorAll('.team-card');
 
   teamCards.forEach((card, index) => {
