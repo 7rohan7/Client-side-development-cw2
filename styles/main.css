@@ -39,7 +39,7 @@ a {
 }
 
 a:hover {
-    color: var(--primary-dark);
+   color: #1abc9c;
 }
 
 .btn {

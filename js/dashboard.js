@@ -1,270 +1,227 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Check authentication
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (!currentUser) {
-        window.location.href = 'login.html';
-        return;
+
+    const addWorkoutBtn = document.getElementById('add-workout-btn');
+    const logMealBtn = document.getElementById('log-meal-btn');
+    const addWorkoutModal = document.getElementById('add-workout-modal');
+    const logMealModal = document.getElementById('log-meal-modal');
+    const closeWorkoutModalBtn = document.getElementById('close-workout-modal');
+    const closeMealModalBtn = document.getElementById('close-meal-modal');
+    const workoutForm = document.getElementById('workout-form');
+    const mealForm = document.getElementById('meal-form');
+    const caloriesBurnedCard = document.getElementById('calories-burned');
+    const resetBtn = document.getElementById('reset-btn');
+
+    function showModal(modal) {
+        modal.style.display = 'flex';
     }
 
-    // Mobile menu toggle
-    setupMobileMenu();
-
-    // Highlight active link
-    highlightActiveLink();
-
-    // Set user profile info
-    displayUserInfo(currentUser);
-
-    // Setup logout functionality
-    setupLogout();
-
-    // Check for workout success message
-    checkForWorkoutSuccess();
-
-    // Load all dashboard data
-    loadDashboardData(currentUser);
-});
-
-function setupMobileMenu() {
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mainNav = document.getElementById('mainNav');
-    
-    if (mobileMenuBtn && mainNav) {
-        mobileMenuBtn.addEventListener('click', function() {
-            mainNav.classList.toggle('active');
-            this.setAttribute('aria-expanded', mainNav.classList.contains('active'));
-        });
+    function hideModal(modal) {
+        modal.style.display = 'none';
     }
-}
 
-function highlightActiveLink() {
-    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
-    const navLinks = document.querySelectorAll('.main-nav a, .footer-section a');
-    
-    navLinks.forEach(link => {
-        const linkPage = link.getAttribute('href').toLowerCase();
-        if (currentPage === linkPage || 
-            (currentPage.includes('workout') && linkPage.includes('workout'))) {
-            link.classList.add('active');
+    addWorkoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        showModal(addWorkoutModal);
+    });
+
+    logMealBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        showModal(logMealModal);
+    });
+
+    closeWorkoutModalBtn.addEventListener('click', function() {
+        hideModal(addWorkoutModal);
+    });
+
+    closeMealModalBtn.addEventListener('click', function() {
+        hideModal(logMealModal);
+    });
+
+    window.addEventListener('click', function(e) {
+        if (e.target === addWorkoutModal) {
+            hideModal(addWorkoutModal);
+        }
+        if (e.target === logMealModal) {
+            hideModal(logMealModal);
         }
     });
-}
 
-function displayUserInfo(user) {
-    const userNameElement = document.getElementById('userName');
-    if (userNameElement) {
-        userNameElement.textContent = user.name || 'Profile';
-    }
-}
+    // --- Chart Data and Initialization ---
 
-function setupLogout() {
-    const logoutLink = document.getElementById('logoutLink');
-    if (logoutLink) {
-        logoutLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.removeItem('currentUser');
-            window.location.href = 'login.html';
-        });
-    }
-}
-
-function checkForWorkoutSuccess() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('workoutSaved')) {
-        const calories = urlParams.get('calories') || 0;
-        showNotification(`Workout saved! ${calories} kcal burned`, 'success');
-        
-        // Clean URL without reloading
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-}
-
-function loadDashboardData(user) {
-    loadUserStats(user);
-    loadWorkoutStats(user);
-    initializeCharts(user);
-    loadRecentActivities(user.fitnessStats?.workouts || []);
-}
-
-function loadUserStats(user) {
-    if (user.healthData) {
-        const weightElement = document.getElementById('currentWeight');
-        const heightElement = document.getElementById('userHeight');
-        const bmiElement = document.getElementById('bmiValue');
-        
-        if (weightElement) weightElement.textContent = user.healthData.weight || '--';
-        if (heightElement) heightElement.textContent = user.healthData.height || '--';
-        
-        if (bmiElement && user.healthData.weight && user.healthData.height) {
-            const heightInMeters = user.healthData.height / 100;
-            const bmi = (user.healthData.weight / (heightInMeters * heightInMeters)).toFixed(1);
-            bmiElement.textContent = bmi;
-            
-            // Add BMI category
-            const bmiCategory = getBmiCategory(bmi);
-            bmiElement.nextElementSibling.textContent = bmiCategory;
-        }
-    }
-}
-
-function getBmiCategory(bmi) {
-    if (bmi < 18.5) return 'Underweight';
-    if (bmi < 25) return 'Normal';
-    if (bmi < 30) return 'Overweight';
-    return 'Obese';
-}
-
-function loadWorkoutStats(user) {
-    const workouts = user.fitnessStats?.workouts || [];
-    const totalCalories = workouts.reduce((sum, w) => sum + (w.calories || 0), 0);
-    const totalWorkouts = workouts.length;
+    let workoutMinutesData = JSON.parse(localStorage.getItem('workoutMinutesData')) || [0, 0, 0, 0, 0, 0, 0];
+    let caloriesConsumedData = JSON.parse(localStorage.getItem('caloriesConsumedData')) || [0, 0, 0, 0, 0, 0, 0];
+    let caloriesBurnedData = JSON.parse(localStorage.getItem('caloriesBurnedData')) || [0, 0, 0, 0, 0, 0, 0];
     
-    document.getElementById('caloriesBurned').textContent = totalCalories;
-    document.getElementById('totalWorkouts').textContent = totalWorkouts;
-}
+    function updateCaloriesBurnedCard() {
+        const totalCaloriesBurned = caloriesBurnedData.reduce((acc, curr) => acc + curr, 0);
+        caloriesBurnedCard.textContent = `${totalCaloriesBurned} kcal`;
+    }
 
-function initializeCharts(user) {
-    const workouts = user.fitnessStats?.workouts || [];
-    
-    // Weekly Activity Chart
-    const activityCtx = document.getElementById('activityChart');
-    if (activityCtx) {
-        new Chart(activityCtx.getContext('2d'), {
-            type: 'bar',
-            data: getWeeklyActivityData(workouts),
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: { display: true, text: 'Minutes' }
+    // Data for the weekly activity chart
+    const weeklyActivityData = {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+            label: 'Workout Minutes',
+            data: workoutMinutesData,
+            backgroundColor: 'rgba(52, 152, 219, 0.8)', 
+            borderColor: 'rgba(52, 152, 219, 1)',
+            borderWidth: 1,
+            barPercentage: 0.5
+        }]
+    };
+
+    // Configuration for the weekly activity chart
+    const weeklyActivityConfig = {
+        type: 'bar',
+        data: weeklyActivityData,
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        display: false
                     }
                 }
-            }
-        });
-    }
-
-    // Calorie Chart
-    const calorieCtx = document.getElementById('calorieChart');
-    if (calorieCtx) {
-        new Chart(calorieCtx.getContext('2d'), {
-            type: 'doughnut',
-            data: getCalorieData(workouts),
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'bottom' }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
                 }
             }
-        });
-    }
-}
+        },
+    };
 
-function getWeeklyActivityData(workouts) {
-    // Group workouts by day of week
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const activityData = Array(7).fill(0);
+    // Initialize the weekly activity chart
+    const weeklyActivityChart = new Chart(
+        document.getElementById('activityChart'),
+        weeklyActivityConfig
+    );
+
+    // Data for the calorie chart
+    const calorieData = {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [
+            {
+                label: 'Calories Consumed',
+                data: caloriesConsumedData,
+                borderColor: 'rgba(231, 76, 60, 1)', 
+                backgroundColor: 'rgba(231, 76, 60, 0.5)',
+                tension: 0.1,
+                pointRadius: 5
+            },
+            {
+                label: 'Calories Burned',
+                data: caloriesBurnedData,
+                borderColor: 'rgba(46, 204, 113, 1)', 
+                backgroundColor: 'rgba(46, 204, 113, 0.5)',
+                tension: 0.1,
+                pointRadius: 5
+            }
+        ]
+    };
+
+    // Configuration for the calorie chart
+    const calorieConfig = {
+        type: 'line',
+        data: calorieData,
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    };
+
+    // Initialize the calorie chart
+    const calorieChart = new Chart(
+        document.getElementById('calorieChart'),
+        calorieConfig
+    );
     
-    workouts.forEach(workout => {
-        const day = new Date(workout.date).getDay();
-        activityData[day] += workout.duration || 0;
+    weeklyActivityChart.update();
+    calorieChart.update();
+    updateCaloriesBurnedCard();
+
+    // --- Form Submission Logic ---
+
+    workoutForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const dayIndex = parseInt(document.getElementById('workout-day').value);
+        const minutes = parseInt(document.getElementById('workout-minutes').value);
+        const burned = parseInt(document.getElementById('calories-burned-input').value);
+
+        if (!isNaN(dayIndex) && !isNaN(minutes) && !isNaN(burned)) {
+            workoutMinutesData[dayIndex] += minutes;
+            caloriesBurnedData[dayIndex] += burned;
+
+            localStorage.setItem('workoutMinutesData', JSON.stringify(workoutMinutesData));
+            localStorage.setItem('caloriesBurnedData', JSON.stringify(caloriesBurnedData));
+            
+            weeklyActivityChart.update();
+            calorieChart.update();
+            updateCaloriesBurnedCard();
+
+            workoutForm.reset();
+            hideModal(addWorkoutModal);
+        }
     });
-    
-    return {
-        labels: days,
-        datasets: [{
-            label: 'Activity Minutes',
-            data: activityData,
-            backgroundColor: 'rgba(74, 144, 226, 0.7)'
-        }]
-    };
-}
 
-function getCalorieData(workouts) {
-    const totalBurned = workouts.reduce((sum, w) => sum + (w.calories || 0), 0);
-    const avgConsumed = 2000; // This should come from nutrition data
-    
-    return {
-        labels: ['Burned', 'Consumed'],
-        datasets: [{
-            data: [totalBurned, avgConsumed],
-            backgroundColor: ['rgba(74, 144, 226, 0.7)', 'rgba(231, 76, 60, 0.7)']
-        }]
-    };
-}
+    mealForm.addEventListener('submit', function(e) {
+        e.preventDefault();
 
-function loadRecentActivities(workouts) {
-    const activityList = document.getElementById('activityList');
-    if (!activityList) return;
-    
-    if (workouts.length === 0) {
-        activityList.innerHTML = '<p class="no-activities">No workouts recorded yet</p>';
-        return;
-    }
+        const dayIndex = parseInt(document.getElementById('meal-day').value);
+        const consumed = parseInt(document.getElementById('calories-consumed').value);
 
-    // Sort by date (newest first) and limit to 3
-    const recentWorkouts = [...workouts]
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 3);
+        if (!isNaN(dayIndex) && !isNaN(consumed)) {
+            caloriesConsumedData[dayIndex] += consumed;
+            
+            localStorage.setItem('caloriesConsumedData', JSON.stringify(caloriesConsumedData));
+            
+            calorieChart.update();
 
-    activityList.innerHTML = recentWorkouts.map(workout => `
-        <div class="activity-item" onclick="navigateToWorkout('${workout.id}')">
-            <div class="activity-icon">
-                <i class="fas ${getWorkoutIcon(workout.type)}"></i>
-            </div>
-            <div class="activity-details">
-                <h4>${formatWorkoutType(workout.type)}</h4>
-                <p>${workout.duration} mins • ${workout.calories} kcal</p>
-                <span>${formatWorkoutDate(workout.date)}</span>
-            </div>
-        </div>
-    `).join('');
-}
+            mealForm.reset();
+            hideModal(logMealModal);
+        }
+    });
 
-// Helper functions
-function getWorkoutIcon(type) {
-    const icons = {
-        running: 'fa-running',
-        cycling: 'fa-biking',
-        swimming: 'fa-swimmer',
-        yoga: 'fa-spa',
-        'weight-training': 'fa-dumbbell'
-    };
-    return icons[type.toLowerCase()] || 'fa-heartbeat';
-}
+    // --- New Functionality ---
+    resetBtn.addEventListener('click', function() {
+        if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+            // Reset local storage
+            localStorage.removeItem('workoutMinutesData');
+            localStorage.removeItem('caloriesConsumedData');
+            localStorage.removeItem('caloriesBurnedData');
 
-function formatWorkoutType(type) {
-    return type.split('-').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
-}
+            // Reset chart data arrays to zero
+            workoutMinutesData = [0, 0, 0, 0, 0, 0, 0];
+            caloriesConsumedData = [0, 0, 0, 0, 0, 0, 0];
+            caloriesBurnedData = [0, 0, 0, 0, 0, 0, 0];
+            
+            // Update chart data
+            weeklyActivityChart.data.datasets[0].data = workoutMinutesData;
+            calorieChart.data.datasets[0].data = caloriesConsumedData;
+            calorieChart.data.datasets[1].data = caloriesBurnedData;
 
-function formatWorkoutDate(dateString) {
-    const options = { weekday: 'short', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-}
-
-function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-// Global function for navigation
-window.navigateToWorkout = function(workoutId) {
-    window.location.href = `workout-details.html?id=${workoutId}`;
-};
+            // Update charts and calorie card
+            weeklyActivityChart.update();
+            calorieChart.update();
+            updateCaloriesBurnedCard();
+            
+            alert('All data has been reset.');
+        }
+    });
+});
