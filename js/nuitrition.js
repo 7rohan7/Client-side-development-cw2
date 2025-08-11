@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let totalCarbs = 0;
     let totalFats = 0;
 
-    // Show the modal when the "Add Food" button is clicked
     if (addFoodBtn) {
         addFoodBtn.addEventListener('click', function() {
             modal.style.display = 'flex';
