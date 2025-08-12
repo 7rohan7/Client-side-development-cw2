@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Nutrition page loaded successfully.");
 
-    const addFoodBtn = document.getElementById('add-food-btn');
     const modal = document.getElementById('add-food-modal');
-    const closeModalBtn = document.querySelector('.close-btn');
     const addFoodForm = document.getElementById('add-food-form');
 
     let totalCalories = 0;
@@ -11,25 +9,23 @@ document.addEventListener('DOMContentLoaded', function() {
     let totalCarbs = 0;
     let totalFats = 0;
 
-    if (addFoodBtn) {
-        addFoodBtn.addEventListener('click', function() {
-            modal.style.display = 'flex';
-        });
-    }
 
-    // Hide the modal when the close button is clicked
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
-    }
+// Show the modal when the "Add Food" button is clicked
+$('#add-food-btn').on('click', function() {
+    $('#add-food-modal').css('display', 'flex');
+});
 
-    // Hide the modal when clicking outside of it
-    window.addEventListener('click', function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    });
+// Hide the modal when the close button is clicked
+$('.close-btn').on('click', function() {
+    $('#add-food-modal').css('display', 'none');
+});
+
+// Hide the modal when clicking outside of it
+$(window).on('click', function(event) {
+    if ($(event.target).is('#add-food-modal')) {
+        $('#add-food-modal').css('display', 'none');
+    }
+});
 
     // Handle form submission
     if (addFoodForm) {
