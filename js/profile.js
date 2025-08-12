@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
+// converted to jQuery
+$(document).ready(function () {
   const tabs = document.querySelectorAll('.tab-btn');
   const contents = document.querySelectorAll('.tab-content');
 
